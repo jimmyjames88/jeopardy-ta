@@ -1,12 +1,13 @@
 <template>
   <article>
-    <h1>Score: ${{ this.score }}</h1>
     <div id="game">
       <show-question
         v-if="activeQuestion"
         v-bind="activeQuestion"
         @outcome="handleOutcome"
       />
+      
+      <!-- showOutcome -->
       <div id="showOutcome" v-if="outcome">
         <div v-if="outcome.result">
           CORRECT!
@@ -16,15 +17,23 @@
         </div>
         <button @click="outcome=null">Continue</button>
       </div>
-      <div id="board" v-show="!activeQuestion && !outcome">
-        <div v-for="(category, key, catIndex) in categorizedQuestions" :key="`c-${catIndex}`" class="category-column">
-          <div class="category-header">{{ key }}</div>
-          <question
-            v-for="(question, index) in category"
-            :key="`q-${catIndex}-${index}`"
-            v-bind="question"
-            @activate="showQuestion(question)"
-          />
+
+      <!-- -->
+      <div v-show="!activeQuestion && !outcome">
+        <header>
+          <h1 id="score">JEOPARDY</h1>
+          <h2>Score: <span>${{ this.score }}</span></h2>
+        </header>
+        <div id="board">
+          <div v-for="(category, key, catIndex) in categorizedQuestions" :key="`c-${catIndex}`" class="category-column">
+            <div class="category-header">{{ key }}</div>
+            <question
+              v-for="(question, index) in category"
+              :key="`q-${catIndex}-${index}`"
+              v-bind="question"
+              @activate="showQuestion(question)"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -99,6 +108,7 @@
 </script>
 
 <style lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap');
 @import '../scss/_variables.scss';
 
 * {
@@ -112,44 +122,85 @@ html, body {
 }
 
 body {
-  background-color: $color-border;
+  background: linear-gradient(#4949a0, $color-background);
+  min-height: 100vh;
 }
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+  font-family: 'Impact', sans-serif;
+  font-weight: normal;
+  font-size: 2rem;
+
+  span {
+    color: $color-value;
+  }
+}
+
 
 #game {
-    background-color: $color-background;
     color: $color-light;
     position: relative;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-#showQuestion {
-  position: absolute;
-  z-index: 2;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  background-color: $color-background;
+#showOutcome {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-family: 'Merriweather';
+  font-size: 4rem;
+
+  button {
+    background-color: transparent;
+    font-family: 'Impact', serif;
+    font-size: 2rem;
+    color: $color-light;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+      color: $color-value;
+    }
+  }
 }
 
 #board {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
   font-family: 'Impact', sans-serif;
-  height: 55vw;
 
   .category-header,
   .question {
     height: 16.66%;
-    display: flex;
     background: linear-gradient(transparent, rgba(255, 255, 255, 0.2));
   }
 
   .category-header {
     color: $color-light;
-    text-align: center;
     text-transform: uppercase;
+    text-align: center;
     border: 6px solid $color-border;
     font-size: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+@media screen and (min-width: 991px) {
+  #board {
+    grid-template-columns: repeat(6, 1fr);
+    height: 55vw;
+    max-height: 85vh;
   }
 }
 </style>

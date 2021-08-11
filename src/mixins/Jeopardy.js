@@ -17,7 +17,7 @@ export default {
   computed: {
     categories() {
       // get set of the unique categories in the data
-      return [... new Set(data.map(({ category }) => category))].slice(0, 5);
+      return [... new Set(data.map(({ category }) => category))].slice(6, 12);
     },
   },
 
