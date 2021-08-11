@@ -2,14 +2,7 @@
   <article>
     <h1>Jeopardy!</h1>
     <div id="game">
-      <div id="showQuestion" v-if="activeQuestion">
-        <p>{{ activeQuestion.question }}</p>
-        <ul>
-          <li v-for="(answer, i) in activeQuestion.answers" :key="`a-${i}`" @click="activeQuestion=false">
-            {{ answer }}
-          </li>
-        </ul>
-      </div>
+      <show-question v-if="activeQuestion" v-bind="activeQuestion" />
       <div id="board">
         <div v-for="(category, key, catIndex) in categorizedQuestions" :key="`c-${catIndex}`" class="category-column">
           <div class="category-header">{{ key }}</div>
@@ -28,11 +21,12 @@
 <script>
   import JeopardyGame from '../mixins/Jeopardy';
   import Question from '../components/Question';
+  import ShowQuestion from '../components/ShowQuestion';
 
   export default {
     name: 'TakeHome',
     mixins:[JeopardyGame],
-    components: { Question },
+    components: { Question, ShowQuestion },
 
     computed: {
       categorizedQuestions() {
@@ -72,10 +66,7 @@
 </script>
 
 <style lang="scss">
-$color-light: #fff;
-$color-background: #000099;
-$color-border: #090909;
-$color-value: #e9e97e;
+@import '../scss/_variables.scss';
 
 * {
   margin: 0;
@@ -126,25 +117,6 @@ body {
     text-transform: uppercase;
     border: 6px solid $color-border;
     font-size: 1.5rem;
-  }
-
-  .question {
-    border: 4px solid $color-border;
-
-    .question-cell {
-      color: $color-value;
-      font-size: 4vw;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-
-      &:hover {
-        background-color: rgba(255, 255, 255, 0.2);
-      }
-    }
   }
 }
 </style>
