@@ -23,13 +23,22 @@ export default {
         question: {
             type: String,
             required: true,
+        },
+        value: {
+            type: String,
+            required: true
+        }
+    },
+    computed: {
+        nvalue() {
+            return parseInt(this.value.replace('$', ''), 10);
         }
     },
     methods: {
         chooseAnswer(i) {
             this.checkAnswer(this.question, this.answers[i])
                 .then((result) => {
-                    console.log('checkAnswer', result);
+                    this.$emit('outcome', { result, value: this.nvalue });
                 })
         }
     }

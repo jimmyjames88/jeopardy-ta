@@ -12,6 +12,10 @@ export default {
       type: Boolean,
       default: false
     },
+    answered: {
+        type: Boolean,
+        default: false
+    },
     answers: {
       type: Array,
       required: true
@@ -25,15 +29,9 @@ export default {
       required: true
     }
   },
-  data() {
-    return {
-      answered: false,
-    }
-  },
   methods: {
     activate() {
       if (this.answered) { return false; }
-      this.answered = true;
       this.$emit('activate');
     }
   }

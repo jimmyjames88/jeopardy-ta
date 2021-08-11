@@ -1,9 +1,22 @@
 <template>
   <article>
-    <h1>Jeopardy!</h1>
+    <h1>Score: ${{ this.score }}</h1>
     <div id="game">
-      <show-question v-if="activeQuestion" v-bind="activeQuestion" />
-      <div id="board">
+      <show-question
+        v-if="activeQuestion"
+        v-bind="activeQuestion"
+        @outcome="handleOutcome"
+      />
+      <div id="showOutcome" v-if="outcome">
+        <div v-if="outcome.result">
+          CORRECT!
+        </div>
+        <div v-else>
+          INCORRECT!
+        </div>
+        <button @click="outcome=null">Continue</button>
+      </div>
+      <div id="board" v-show="!activeQuestion && !outcome">
         <div v-for="(category, key, catIndex) in categorizedQuestions" :key="`c-${catIndex}`" class="category-column">
           <div class="category-header">{{ key }}</div>
           <question
@@ -32,6 +45,7 @@
       categorizedQuestions() {
         var sorted = {}
         this.questions.forEach((question) => {
+          question['answered'] = false;
           if (sorted[question.category]) {
             sorted[question.category].push(question)
           } else {
@@ -46,7 +60,9 @@
     data() {
       return {
         activeQuestion: false,
-        questions: []
+        outcome: null,
+        questions: [],
+        score: 0
       }
     },
 
@@ -58,7 +74,24 @@
     },
 
     methods: {
+      addScore(value) {
+        this.score += value;
+      }, 
+      subScore(value) {
+        this.score -= value;
+      },
+      handleOutcome(outcome) {
+        this.activeQuestion = false;
+        if (outcome.result) {
+          this.addScore(outcome.value);
+        } else {
+          this.subScore(outcome.value);
+        }
+        this.outcome = outcome;
+      },
+
       showQuestion(question) {
+        question.answered = true;
         this.activeQuestion = question;
       }
     }
